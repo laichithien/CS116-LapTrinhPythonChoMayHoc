@@ -3,7 +3,7 @@ import geopandas
 import time
 import matplotlib.pyplot as plt 
 
-HCM_shapefile = geopandas.read_file('C:/Workspace/PythonForML/GIS/CSL_HCMC/Data/GIS/Population/population_HCMC/population_shapefile/Population_Ward_Level.shp')
+HCM_shapefile = geopandas.read_file('./GIS/CSL_HCMC/Data/GIS/Population/population_HCMC/population_shapefile/Population_Ward_Level.shp')
 # print('Head:\n', HCM_shapefile.head())
 # HCM_shapefile.plot(column='Shape_Area', figsize=(16, 8))
 # plt.show()
