@@ -4,6 +4,7 @@ import numpy as np
 from PIL import Image
 import os
 import seaborn as sb
+from sklearn.linear_model import LinearRegression
 
 st.title("HỆ THỐNG PHÂN TÍCH DỮ LIỆU TỰ ĐỘNG")
 
@@ -41,11 +42,13 @@ output = st.selectbox('Choose your output: ', output_list) # Output được lư
 st.header("Data Preprocessing")
 train_test_split_col, k_folder_col = st.columns(2)
 
-with train_test_split_col:
+dataset_split = st.radio('Chọn cách chia dữ liệu huấn luyện', ['Train/test split', 'K Fold'])
+if not dataset_split: 
+    st.stop()
+
+if dataset_split == 'Train/test split':
     train_size = st.slider('Train', 0, 100, format='%d%%') # Train size được lưu trong train_size
-    
-with k_folder_col:
-    is_k_folder = st.checkbox("K Folder")
-    if is_k_folder:
-        k = st.number_input('Folder', 0, 10) # K folder (nếu có được lưu trong k)
+elif dataset_split == 'K Fold':
+    k = st.slider('Folds', 0, 10) # K folder (nếu có được lưu trong k)
+
 
