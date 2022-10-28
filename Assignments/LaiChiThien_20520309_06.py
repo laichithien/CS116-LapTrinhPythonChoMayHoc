@@ -14,8 +14,10 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import r2_score
-st.title("HỆ THỐNG PHÂN TÍCH DỮ LIỆU TỰ ĐỘNG")
+import matplotlib.pyplot as plt
 import math
+st.title("HỆ THỐNG PHÂN TÍCH DỮ LIỆU TỰ ĐỘNG")
+
 
 uploaded_file = st.file_uploader("Upload dữ liệu của bạn tại đây")
 if not uploaded_file: 
@@ -30,7 +32,7 @@ if uploaded_file is not None:
 dataset = pd.read_csv(uploaded_file)
 st.table(dataset.iloc[0:10])
 # Lấy feature
-st.header("Input feature: ")
+st.header("Đặc trưng đầu vào: ")
 list_header = dataset.columns
 checkboxes_feature = st.columns(len(list_header))
 feature_used = []
@@ -50,14 +52,45 @@ feature_list = [feature for feature in feature_list_root if not dataset[feature]
 nan_list = [header for header in dataset.columns if dataset[header].dtype == object and header in feature_list_root]
 data_train_num = dataset.loc[:, feature_list]
 data_train_ob = dataset.loc[:, nan_list]
-st.table(pd.concat([data_train_num, data_train_ob], axis=1).iloc[0:10])
+data_train_num_ob = pd.concat([data_train_num, data_train_ob], axis=1)
+st.table(data_train_num_ob.iloc[0:10])
+
+
 # st.table(data_train_ob.iloc[0:10])
 # Lấy output
-st.header("Output: ")
+st.header("Đầu ra: ")
 output_list = [header for header in list_header if header not in feature_list_root]
-output = st.selectbox('Choose your output: ', output_list) # Output được lưu trong output 
+output = st.selectbox('Chọn đầu ra của mô hình dự đoán: ', output_list) # Output được lưu trong output 
 
-st.header("Data Preprocessing")
+st.header('Tương quan giữa output và các đặc trưng')
+chosen_feature = [feature for feature in data_train_num_ob.columns.astype(str)]
+tabs = st.tabs(chosen_feature)
+for i in range(len(tabs)):
+    with tabs[i]:
+        fig, ax = plt.subplots(figsize=(5, 3))
+        ax.scatter(x=dataset[chosen_feature[i]], y=dataset[output])
+        plt.xlabel(chosen_feature[i])
+        plt.ylabel(output)
+        st.pyplot(fig)
+
+st.header('Tương quan giữa các đặc trưng')
+feature1, feature2 = st.columns(2)
+
+with feature1:
+    ft1 = st.selectbox("Đặc trưng thứ nhất", feature_list_root)
+    feature_selected = [feature for feature in feature_list_root if feature != ft1]
+    st.write(ft1)
+with feature2:
+    ft2 = st.selectbox("Đặc trưng thứ hai", feature_selected)
+    st.write(ft2)
+
+fig, ax = plt.subplots(figsize=(5, 3))
+ax.scatter(x=dataset[ft1], y=dataset[ft2])
+plt.xlabel(ft1)
+plt.ylabel(ft2)
+st.pyplot(fig)
+
+st.header("Data Splitting")
 
 ohe = OneHotEncoder()
 transformed = ohe.fit_transform(data_train_ob)
@@ -98,7 +131,6 @@ with result2:
     if not k:
         st.stop()
     kf = KFold(n_splits=k)
-    kf.get_n_splits(data_train)
     model_list = []
     mae_list = []
     mse_list = []
@@ -125,6 +157,8 @@ with result2:
     st.write('Average MAE:', avg_mae)
     st.write('Average MSE:', avg_mse)
     st.write('Average R2:', avg_r2)
+
+
 
 
 
