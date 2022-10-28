@@ -122,29 +122,10 @@ with result2:
     avg_mae = sum(mae_list[0])/len(mae_list)
     avg_mse = sum(mse_list[0])/len(mse_list)
     avg_r2 = sum(r2_list[0])/len(r2_list)
-    st.write('Average mae:', avg_mae)
-    st.write('Average mse:', avg_mse)
-    st.write('Average r2:', avg_r2)
-# if dataset_split == 'Train/test split':
-#     train_size = st.slider('Train', 0, 100, format='%d%%') # Train size được lưu trong train_size
-# elif dataset_split == 'K Fold':
-     # K folder (nếu có được lưu trong k)
+    st.write('Average MAE:', avg_mae)
+    st.write('Average MSE:', avg_mse)
+    st.write('Average R2:', avg_r2)
 
-
-
-
-# st.table(data_train.iloc[0: 10])
-# Splitting strategy
-# if dataset_split == 'Train/test split':
-#     if not train_size:
-#         st.stop()
-#     X_train, X_test, y_train, y_test = train_test_split(data_train, data_test, train_size=train_size/100)
-
-
-# elif dataset_split == 'K Fold':
-    
-
-# st.table(y_train)
 
 
 
