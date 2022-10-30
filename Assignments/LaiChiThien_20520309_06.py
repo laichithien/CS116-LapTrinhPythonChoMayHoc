@@ -105,11 +105,11 @@ train_test_split_col, k_folder_col = st.columns(2)
 with train_test_split_col:
     st.header("Train/test split")
     st.header("     ")
-    train_size = st.slider('Train', 0, 100, format='%d%%') # Train size được lưu trong train_size
+    train_size = st.slider('Train', 40, 100, format='%d%%') # Train size được lưu trong train_size
     
 with k_folder_col:
     st.header("K Fold Cross-validation")
-    k = st.slider('Folds', 0, 10)
+    k = st.slider('Folds', 2, 10)
     
 run = st.button('Run')
 if not run:
@@ -133,10 +133,6 @@ with result1:
     st.write("MSE:", mse_tts)
     r2_tts = r2_score(y_test, y_pred)
     st.write("R2:", r2_tts)
-    # table = [mae_tts, mse_tts, r2_tts]
-    # table = pd.DataFrame(table, columns=['SCORE'])
-    # table.index = ['MAE', 'MSE', 'R2']
-    # st.bar_chart(table) 
 with result2:
     if not k:
         st.stop()
@@ -161,6 +157,7 @@ with result2:
     mae_list = pd.DataFrame(mae_list, columns=['Score'])
     mse_list = pd.DataFrame(mse_list, columns=['Score'])
     r2_list = pd.DataFrame(r2_list, columns=['Score'])
+
     mae_list.index = mae_list.index.factorize()[0] + 1
     mse_list.index = mse_list.index.factorize()[0] + 1
     r2_list.index = r2_list.index.factorize()[0] + 1
@@ -192,16 +189,7 @@ with result2:
         st.altair_chart(chart_mae, use_container_width=True)
 
 
-    # with graph_mae:
-    #     val_count  = mae_list['MAE'].value_counts()
-    #     fig = plt.figure(figsize=(10,5))
-    #     sns.barplot(val_count.index, val_count.values, alpha=0.8)
-    #     fig.ylabel('y label', fontsize=12)
-    #     fig.xlabel('x label', fontsize=12)
-
-
-    #     # Add figure in streamlit app
-    #     st.pyplot(fig)
+    
 
 
 
