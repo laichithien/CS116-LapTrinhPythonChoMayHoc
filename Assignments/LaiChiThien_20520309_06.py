@@ -50,7 +50,7 @@ for i in range(len(list_header)):
 
 if not feature_list_root:
     st.stop()
-if (len(feature_list_root) == feature_used):
+if (len(feature_list_root) == len(feature_used)):
     st.stop()
     st.warning("Bạn không thể chọn tất cả đặc trưng!!")
 feature_list = [feature for feature in feature_list_root if not dataset[feature].dtype == object]
