@@ -15,6 +15,9 @@ from sklearn.metrics import mean_squared_error
 from sklearn.metrics import r2_score
 import matplotlib.pyplot as plt
 import math
+import seaborn as sns
+import altair as alt 
+
 st.title("HỆ THỐNG PHÂN TÍCH DỮ LIỆU TỰ ĐỘNG")
 
 
@@ -108,6 +111,10 @@ with k_folder_col:
     st.header("K Fold Cross-validation")
     k = st.slider('Folds', 0, 10)
     
+run = st.button('Run')
+if not run:
+    st.stop()
+
 result1, result2 = st.columns(2)
 with result1:
     if not train_size:
@@ -120,12 +127,16 @@ with result1:
     # st.write(y_test)
     y_pred = reg.predict(X_test)
     # st.write(y_pred)
-    mae = mean_absolute_error(y_test, y_pred)
-    st.write("MAE:", mae)
-    mse = mean_squared_error(y_test, y_pred)
-    st.write("MSE:", mse)
-    r2 = r2_score(y_test, y_pred)
-    st.write("R2:", r2)
+    mae_tts = mean_absolute_error(y_test, y_pred)
+    st.write("MAE:", mae_tts)
+    mse_tts = mean_squared_error(y_test, y_pred)
+    st.write("MSE:", mse_tts)
+    r2_tts = r2_score(y_test, y_pred)
+    st.write("R2:", r2_tts)
+    # table = [mae_tts, mse_tts, r2_tts]
+    # table = pd.DataFrame(table, columns=['SCORE'])
+    # table.index = ['MAE', 'MSE', 'R2']
+    # st.bar_chart(table) 
 with result2:
     if not k:
         st.stop()
@@ -147,15 +158,50 @@ with result2:
         mae_list.append(mae)
         mse_list.append(mse)
         r2_list.append(r2)
-    mae_list = pd.DataFrame(mae_list)
-    mse_list = pd.DataFrame(mse_list)
-    r2_list = pd.DataFrame(r2_list)
-    avg_mae = sum(mae_list[0])/len(mae_list)
-    avg_mse = sum(mse_list[0])/len(mse_list)
-    avg_r2 = sum(r2_list[0])/len(r2_list)
+    mae_list = pd.DataFrame(mae_list, columns=['Score'])
+    mse_list = pd.DataFrame(mse_list, columns=['Score'])
+    r2_list = pd.DataFrame(r2_list, columns=['Score'])
+    mae_list.index = mae_list.index.factorize()[0] + 1
+    mse_list.index = mse_list.index.factorize()[0] + 1
+    r2_list.index = r2_list.index.factorize()[0] + 1
+
+    mae_list.reset_index(inplace=True)
+    mae_list = mae_list.rename(columns = {'index':'Fold'})
+    mse_list.reset_index(inplace=True)
+    mse_list = mse_list.rename(columns = {'index':'Fold'})
+    r2_list.reset_index(inplace=True)
+    r2_list = r2_list.rename(columns = {'index':'Fold'})
+
+    avg_mae = sum(mae_list['Score'])/len(mae_list)
+    avg_mse = sum(mse_list['Score'])/len(mse_list)
+    avg_r2 = sum(r2_list['Score'])/len(r2_list)
     st.write('Average MAE:', avg_mae)
     st.write('Average MSE:', avg_mse)
     st.write('Average R2:', avg_r2)
+    graph_mae, graph_mse, graph_r2 = st.tabs(['MAE', 'MSE', 'R2'])
+    
+    with graph_mae:
+        chart_mae = alt.Chart(mae_list).mark_bar(size=30).encode(alt.X('Fold', axis=alt.Axis(title='Fold', tickMinStep=1)), y='Score')
+        st.altair_chart(chart_mae, use_container_width=False)
+        # st.bar_chart(mae_list)
+    with graph_mse:
+        chart_mse = alt.Chart(mse_list).mark_bar().encode(alt.X('Fold', axis=alt.Axis(title='Fold', tickMinStep=1)), y='Score')
+        st.altair_chart(chart_mae, use_container_width=True)
+    with graph_r2:
+        chart_r2 = alt.Chart(r2_list).mark_bar().encode(alt.X('Fold', axis=alt.Axis(title='Fold', tickMinStep=1)), y='Score')
+        st.altair_chart(chart_mae, use_container_width=True)
+
+
+    # with graph_mae:
+    #     val_count  = mae_list['MAE'].value_counts()
+    #     fig = plt.figure(figsize=(10,5))
+    #     sns.barplot(val_count.index, val_count.values, alpha=0.8)
+    #     fig.ylabel('y label', fontsize=12)
+    #     fig.xlabel('x label', fontsize=12)
+
+
+    #     # Add figure in streamlit app
+    #     st.pyplot(fig)
 
 
 
