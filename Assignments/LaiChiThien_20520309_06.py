@@ -51,8 +51,9 @@ for i in range(len(list_header)):
 if not feature_list_root:
     st.stop()
 if (len(feature_list_root) == len(feature_used)):
-    st.stop()
     st.warning("Bạn không thể chọn tất cả đặc trưng!!")
+    st.stop()
+    
 feature_list = [feature for feature in feature_list_root if not dataset[feature].dtype == object]
 nan_list = [header for header in dataset.columns if dataset[header].dtype == object and header in feature_list_root]
 data_train_num = dataset.loc[:, feature_list]
