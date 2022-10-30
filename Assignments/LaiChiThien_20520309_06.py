@@ -71,30 +71,37 @@ output = st.selectbox('Chọn đầu ra của mô hình dự đoán: ', output_l
 st.header('Tương quan giữa output và các đặc trưng')
 chosen_feature = [feature for feature in data_train_num_ob.columns.astype(str)]
 tabs = st.tabs(chosen_feature)
-for i in range(len(tabs)):
-    with tabs[i]:
-        fig, ax = plt.subplots(figsize=(5, 3))
-        ax.scatter(x=dataset[chosen_feature[i]], y=dataset[output])
-        plt.xlabel(chosen_feature[i])
-        plt.ylabel(output)
-        st.pyplot(fig)
+active_draw1 = st.button("Vẽ")
+if active_draw1:
+    for i in range(len(tabs)):
+        with tabs[i]:
+            fig, ax = plt.subplots(figsize=(5, 3))
+            ax.scatter(x=dataset[chosen_feature[i]], y=dataset[output])
+            plt.xlabel(chosen_feature[i])
+            plt.ylabel(output)
+            st.pyplot(fig)
+
 
 st.header('Tương quan giữa các đặc trưng')
-feature1, feature2 = st.columns(2)
 
-with feature1:
-    ft1 = st.selectbox("Đặc trưng thứ nhất", feature_list_root)
-    feature_selected = [feature for feature in feature_list_root if feature != ft1]
-    st.write(ft1)
-with feature2:
-    ft2 = st.selectbox("Đặc trưng thứ hai", feature_selected)
-    st.write(ft2)
+active_draw2 = st.button("Vẽ")
+if active_draw2:
+    feature1, feature2 = st.columns(2)
 
-fig, ax = plt.subplots(figsize=(5, 3))
-ax.scatter(x=dataset[ft1], y=dataset[ft2])
-plt.xlabel(ft1)
-plt.ylabel(ft2)
-st.pyplot(fig)
+    with feature1:
+        ft1 = st.selectbox("Đặc trưng thứ nhất", feature_list_root)
+        feature_selected = [feature for feature in feature_list_root if feature != ft1]
+        st.write(ft1)
+    with feature2:
+        ft2 = st.selectbox("Đặc trưng thứ hai", feature_selected)
+        st.write(ft2)
+
+
+    fig, ax = plt.subplots(figsize=(5, 3))
+    ax.scatter(x=dataset[ft1], y=dataset[ft2])
+    plt.xlabel(ft1)
+    plt.ylabel(ft2)
+    st.pyplot(fig)
 
 st.header("Data Splitting")
 
