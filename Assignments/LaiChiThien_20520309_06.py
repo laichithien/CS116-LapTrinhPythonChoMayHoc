@@ -84,7 +84,7 @@ if active_draw1:
 
 st.header('Tương quan giữa các đặc trưng')
 
-active_draw2 = st.button("Vẽ")
+active_draw2 = st.button("Vẽ đồ thị")
 if active_draw2:
     feature1, feature2 = st.columns(2)
 
